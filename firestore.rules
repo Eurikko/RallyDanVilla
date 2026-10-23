@@ -1,0 +1,87 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Profiles Collection
+    match /profiles/{userId} {
+      allow read, create, update: if true;
+      allow delete: if false;
+    }
+
+    // Games Collection
+    match /games/{gameId} {
+      allow read, create, update: if true;
+      allow delete: if false;
+    }
+
+    // Game Registrations Collection
+    match /game_registrations/{registrationId} {
+      allow read, create, update: if true;
+      allow delete: if false;
+    }
+
+    // Technical Level Audit History Collection
+    match /technical_level_history/{historyId} {
+      allow read, create: if true;
+      allow update, delete: if false;
+    }
+
+    // Guest Players Collection
+    match /guest_players/{guestId} {
+      allow read, create, update: if true;
+      allow delete: if false;
+    }
+
+    // Match Sessions Collection
+    match /match_sessions/{matchId} {
+      allow read, create, update: if true;
+      allow delete: if false;
+    }
+
+    // Match Participants Collection
+    match /match_participants/{participantId} {
+      allow read, create, update, delete: if true;
+    }
+
+    // Match Sets Collection
+    match /match_sets/{setId} {
+      allow read, create, update: if true;
+      allow delete: if false;
+    }
+
+    // Match Score Events Collection
+    match /match_score_events/{eventId} {
+      allow read, create, update: if true;
+      allow delete: if false;
+    }
+
+    // Match Attendance Collection
+    match /match_attendance/{attId} {
+      allow read, create, update: if true;
+      allow delete: if false;
+    }
+
+    // Attendance Adjustments Collection (Audit)
+    match /attendance_adjustments/{adjId} {
+      allow read, create: if true;
+      allow update, delete: if false;
+    }
+
+    // Notifications Collection
+    match /notifications/{notificationId} {
+      allow read, create, update: if true;
+      allow delete: if false;
+    }
+
+    // Default deny for unmapped paths
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+

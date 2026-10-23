@@ -1,0 +1,6 @@
+{
+  "name": "RallyNaVila",
+  "description": "Aplicativo para organizar partidas de vôlei na comunidade. Organize a turma. Monte os times. Jogue.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

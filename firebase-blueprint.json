@@ -1,0 +1,261 @@
+{
+  "entities": {
+    "profiles": {
+      "title": "Perfil de Jogador",
+      "description": "Perfis de usuários cadastrados na vila",
+      "properties": {
+        "username": {
+          "type": "string",
+          "description": "Nome de usuário exibido"
+        },
+        "usernameNormalized": {
+          "type": "string",
+          "description": "Nome de usuário minúsculo sem espaços para buscas e unicidade"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["player", "admin", "owner"],
+          "description": "Papel do usuário no sistema"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "suspended", "inactive"],
+          "description": "Status da conta"
+        },
+        "technicalLevel": {
+          "type": "number",
+          "nullable": true,
+          "description": "Nível técnico (1 a 5) atribuído pelos organizadores"
+        },
+        "technicalLevelUpdatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Data da última classificação técnica"
+        },
+        "technicalLevelUpdatedBy": {
+          "type": "string",
+          "nullable": true,
+          "description": "UID do organizador que realizou a classificação"
+        },
+        "attendanceCount": {
+          "type": "number",
+          "description": "Número de presenças confirmadas em jogos"
+        },
+        "photoUrl": {
+          "type": "string",
+          "nullable": true,
+          "description": "URL da foto de perfil"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Data de criação do perfil"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Data da última atualização"
+        }
+      },
+      "required": ["username", "usernameNormalized", "role", "status", "attendanceCount"]
+    },
+    "games": {
+      "title": "Jogo de Vôlei",
+      "description": "Partidas organizadas na vila",
+      "properties": {
+        "title": { "type": "string", "minLength": 3, "maxLength": 80 },
+        "scheduledAt": { "type": "string", "format": "date-time" },
+        "location": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "maxPlayers": { "type": "number", "minimum": 4, "maximum": 30 },
+        "confirmedCount": { "type": "number" },
+        "notes": { "type": "string", "maxLength": 500 },
+        "status": { "type": "string", "enum": ["scheduled", "cancelled", "completed"] },
+        "createdBy": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "cancelledAt": { "type": "string", "format": "date-time" },
+        "cancelledBy": { "type": "string" }
+      },
+      "required": ["title", "scheduledAt", "location", "maxPlayers", "confirmedCount", "status", "createdBy"]
+    },
+    "game_registrations": {
+      "title": "Inscrição no Jogo",
+      "description": "Confirmações e cancelamentos de presença de atletas em jogos",
+      "properties": {
+        "gameId": { "type": "string" },
+        "userId": { "type": "string" },
+        "username": { "type": "string" },
+        "photoUrl": { "type": "string", "nullable": true },
+        "status": { "type": "string", "enum": ["confirmed", "cancelled"] },
+        "confirmedAt": { "type": "string", "format": "date-time" },
+        "cancelledAt": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["gameId", "userId", "username", "status"]
+    },
+    "technical_level_history": {
+      "title": "Histórico de Nível Técnico",
+      "description": "Auditoria de alterações de classificação técnica dos atletas",
+      "properties": {
+        "profileId": { "type": "string" },
+        "previousLevel": { "type": "number", "nullable": true },
+        "newLevel": { "type": "number", "nullable": true },
+        "changedBy": { "type": "string" },
+        "changedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["profileId", "changedBy"]
+    },
+    "guest_players": {
+      "title": "Jogador Convidado",
+      "description": "Atletas sem conta de autenticação cadastrados pelos organizadores",
+      "properties": {
+        "displayName": { "type": "string" },
+        "displayNameNormalized": { "type": "string" },
+        "nickname": { "type": "string", "nullable": true },
+        "technicalLevel": { "type": "number", "nullable": true },
+        "status": { "type": "string", "enum": ["active", "inactive"] },
+        "createdBy": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["displayName", "displayNameNormalized", "status", "createdBy"]
+    },
+    "match_sessions": {
+      "title": "Sessão de Partida Esportiva",
+      "description": "Partida e placar vinculados a um jogo agendado",
+      "properties": {
+        "gameId": { "type": "string" },
+        "status": { "type": "string", "enum": ["draft", "ready", "live", "finished", "cancelled"] },
+        "format": { "type": "string", "enum": ["single_set", "best_of_3", "best_of_5"] },
+        "teamAName": { "type": "string" },
+        "teamBName": { "type": "string" },
+        "currentSetNumber": { "type": "number" },
+        "teamASetsWon": { "type": "number" },
+        "teamBSetsWon": { "type": "number" },
+        "winnerTeam": { "type": "number", "nullable": true },
+        "createdBy": { "type": "string" },
+        "startedAt": { "type": "string", "format": "date-time", "nullable": true },
+        "finishedAt": { "type": "string", "format": "date-time", "nullable": true },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["gameId", "status", "format", "teamAName", "teamBName", "createdBy"]
+    },
+    "match_participants": {
+      "title": "Participante da Partida",
+      "description": "Escalação de atletas (cadastrados e convidados) e distribuição em times",
+      "properties": {
+        "matchId": { "type": "string" },
+        "profileId": { "type": "string", "nullable": true },
+        "guestPlayerId": { "type": "string", "nullable": true },
+        "displayName": { "type": "string" },
+        "isGuest": { "type": "boolean" },
+        "teamNumber": { "type": "number", "nullable": true },
+        "technicalLevelSnapshot": { "type": "number" },
+        "isProvisionalLevel": { "type": "boolean" },
+        "isConfirmed": { "type": "boolean" },
+        "addedBy": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["matchId", "displayName", "isGuest", "technicalLevelSnapshot", "addedBy"]
+    },
+    "match_sets": {
+      "title": "Set da Partida",
+      "description": "Placar e status de cada set disputado",
+      "properties": {
+        "matchId": { "type": "string" },
+        "setNumber": { "type": "number" },
+        "teamAScore": { "type": "number" },
+        "teamBScore": { "type": "number" },
+        "targetScore": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "in_progress", "completed"] },
+        "winnerTeam": { "type": "number", "nullable": true },
+        "startedAt": { "type": "string", "format": "date-time", "nullable": true },
+        "finishedAt": { "type": "string", "format": "date-time", "nullable": true },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["matchId", "setNumber", "teamAScore", "teamBScore", "targetScore", "status"]
+    },
+    "match_score_events": {
+      "title": "Evento de Placar",
+      "description": "Registro de auditoria e controle de concorrência dos pontos da partida",
+      "properties": {
+        "matchId": { "type": "string" },
+        "setId": { "type": "string" },
+        "setNumber": { "type": "number" },
+        "teamNumber": { "type": "number" },
+        "eventType": { "type": "string", "enum": ["point", "undo"] },
+        "clientActionId": { "type": "string" },
+        "reversedEventId": { "type": "string", "nullable": true },
+        "teamAScoreAfter": { "type": "number" },
+        "teamBScoreAfter": { "type": "number" },
+        "createdBy": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["matchId", "setId", "setNumber", "teamNumber", "eventType", "clientActionId", "createdBy"]
+    },
+    "notifications": {
+      "title": "Central de Avisos e Notificações Internas",
+      "description": "Avisos persistentes disparados por eventos reais do sistema para destinatários específicos",
+      "properties": {
+        "recipientId": { "type": "string", "description": "UID do usuário destinatário do aviso" },
+        "type": { 
+          "type": "string", 
+          "enum": ["game_published", "game_updated", "game_cancelled", "spot_confirmed", "lineup_selected", "game_completed", "attendance_recorded"],
+          "description": "Tipo do evento do sistema" 
+        },
+        "title": { "type": "string", "description": "Título explicativo do aviso" },
+        "message": { "type": "string", "description": "Conteúdo da mensagem do aviso" },
+        "read": { "type": "boolean", "description": "Status de leitura do aviso" },
+        "gameId": { "type": "string", "nullable": true, "description": "ID do jogo relacionado" },
+        "matchId": { "type": "string", "nullable": true, "description": "ID da partida relacionada" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Data de disparo do aviso" },
+        "readAt": { "type": "string", "format": "date-time", "nullable": true, "description": "Data de leitura do aviso" }
+      },
+      "required": ["recipientId", "type", "title", "message", "read", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/profiles/{userId}": {
+      "schema": "profiles",
+      "description": "Perfis dos jogadores"
+    },
+    "/games/{gameId}": {
+      "schema": "games",
+      "description": "Jogos de vôlei agendados"
+    },
+    "/game_registrations/{registrationId}": {
+      "schema": "game_registrations",
+      "description": "Lista de presenças confirmadas e canceladas por jogo"
+    },
+    "/technical_level_history/{historyId}": {
+      "schema": "technical_level_history",
+      "description": "Registros de alterações de nível técnico de atletas"
+    },
+    "/guest_players/{guestId}": {
+      "schema": "guest_players",
+      "description": "Jogadores convidados cadastrados sem conta de autenticação"
+    },
+    "/match_sessions/{matchId}": {
+      "schema": "match_sessions",
+      "description": "Partidas esportivas vinculadas a jogos agendados"
+    },
+    "/match_participants/{participantId}": {
+      "schema": "match_participants",
+      "description": "Participantes e escalação dos times por partida"
+    },
+    "/match_sets/{setId}": {
+      "schema": "match_sets",
+      "description": "Sets e pontuação das partidas"
+    },
+    "/match_score_events/{eventId}": {
+      "schema": "match_score_events",
+      "description": "Eventos de pontos e desfazer com id de ação"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "notifications",
+      "description": "Central de avisos internos persistentes por usuário"
+    }
+  }
+}
